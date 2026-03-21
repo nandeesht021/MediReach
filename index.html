@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediReach Bengaluru — Hospital Finder</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --red: #E8382A;
+            --red-light: #FF5B4E;
+            --red-dim: rgba(232, 56, 42, 0.12);
+            --ink: #0E0E0E;
+            --ink2: #2A2A2A;
+            --mist: #F5F3EE;
+            --white: #FFFFFF;
+            --card: #FAFAF8;
+            --border: #E8E5DF;
+            --green: #1A9E5F;
+            --green-dim: rgba(26, 158, 95, 0.1);
+            --amber: #D97706;
+            --blue: #2563EB;
+            --blue-dim: rgba(37, 99, 235, 0.1);
+            --purple: #7C3AED;
+            --purple-dim: rgba(124, 58, 237, 0.1);
+            --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--mist);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--ink);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--white);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--red);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: .7
+            }
+        }
+
+        .header-tag {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .4);
+            font-weight: 300;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .hero {
+            background: var(--ink);
+            padding: 3rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(232, 56, 42, .18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.1;
+            letter-spacing: -.03em;
+            position: relative;
+        }
+
+        .hero h1 span {
+            color: var(--red-light);
+        }
+
+        .hero p {
+            margin-top: .75rem;
+            color: rgba(255, 255, 255, .5);
+            font-size: 1rem;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .stats-bar {
+            background: var(--red);
+            padding: .6rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: white;
+            font-size: .82rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .stat strong {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .search-panel {
+            max-width: 860px;
+            margin: -1.5rem auto 0;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+        }
+
+        .search-row {
+            display: flex;
+            gap: .75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: .65rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .88rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color .18s;
+        }
+
+        .search-input:focus {
+            border-color: var(--red);
+        }
+
+        .zone-tabs {
+            display: flex;
+            gap: .4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .zone-tab {
+            padding: .35rem .85rem;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'DM Sans', sans-serif;
+            transition: all .15s;
+        }
+
+        .zone-tab:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .zone-tab.active {
+            background: var(--ink);
+            color: white;
+            border-color: var(--ink);
+        }
+
+        .section-label {
+            font-family: 'Syne', sans-serif;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: .6rem;
+            display: block;
+        }
+
+        .area-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            gap: .45rem;
+        }
+
+        .area-btn {
+            padding: .55rem .7rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .8rem;
+            font-weight: 500;
+            color: var(--ink2);
+            cursor: pointer;
+            transition: all .18s ease;
+            text-align: center;
+        }
+
+        .area-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: var(--red-dim);
+            transform: translateY(-1px);
+        }
+
+        .area-btn.active {
+            border-color: var(--red);
+            background: var(--red);
+            color: var(--white);
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(232, 56, 42, .35);
+        }
+
+        .area-btn.hidden {
+            display: none;
+        }
+
+        /* EMERGENCY STRIP */
+        .emergency-strip {
+            background: var(--ink2);
+            padding: .7rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .emergency-strip span {
+            color: rgba(255, 255, 255, .7);
+            font-size: .78rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .emergency-strip a {
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: .85rem;
+            background: rgba(255, 255, 255, .15);
+            padding: .2rem .7rem;
+            border-radius: 6px;
+            transition: background .15s;
+        }
+
+        .emergency-strip a:hover {
+            background: rgba(255, 255, 255, .3);
+        }
+
+        /* RESULTS */
+        .results-section {
+            max-width: 960px;
+            margin: 2.5rem auto 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: baseline;
+            gap: .75rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .results-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .results-count {
+            font-size: .8rem;
+            color: rgba(14, 14, 14, .45);
+            font-weight: 400;
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: .4rem;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: .3rem .75rem;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            font-size: .73rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'DM Sans', sans-serif;
+            transition: all .15s;
+        }
+
+        .filter-btn.active-filter {
+            background: var(--ink);
+            color: white;
+            border-color: var(--ink);
+        }
+
+        .hospital-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+            gap: 1rem;
+        }
+
+        .hospital-card {
+            background: var(--white);
+            border-radius: 14px;
+            border: 1.5px solid var(--border);
+            padding: 1.2rem;
+            transition: all .2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hospital-card:hover {
+            border-color: rgba(232, 56, 42, .3);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .hospital-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--red);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .25s ease;
+        }
+
+        .hospital-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: .5rem;
+            margin-bottom: .7rem;
+        }
+
+        .hospital-name {
+            font-family: 'Syne', sans-serif;
+            font-size: .9rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .badge {
+            font-size: .62rem;
+            font-weight: 700;
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .badge-govt {
+            background: var(--blue-dim);
+            color: var(--blue);
+        }
+
+        .badge-pvt {
+            background: var(--purple-dim);
+            color: var(--purple);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: .45rem;
+            margin-bottom: .4rem;
+            font-size: .8rem;
+            color: #555;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .info-icon {
+            width: 15px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            opacity: .55;
+        }
+
+        .specs-wrap {
+            margin-top: .45rem;
+        }
+
+        .spec-tag {
+            font-size: .66rem;
+            padding: .15rem .4rem;
+            background: var(--mist);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: #666;
+            font-weight: 500;
+            display: inline-block;
+            margin: .12rem .08rem 0;
+        }
+
+        .ambul-row {
+            margin-top: .5rem;
+        }
+
+        .ambulance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            font-size: .7rem;
+            font-weight: 600;
+            color: var(--green);
+            background: var(--green-dim);
+            border-radius: 6px;
+            padding: .2rem .5rem;
+        }
+
+        .no-ambulance {
+            font-size: .7rem;
+            color: var(--amber);
+            background: rgba(217, 119, 6, .08);
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: .45rem;
+            margin-top: .9rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .42rem .8rem;
+            border-radius: 8px;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all .15s ease;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn-call {
+            background: var(--red-dim);
+            color: var(--red);
+            border: 1.5px solid rgba(232, 56, 42, .2);
+        }
+
+        .btn-call:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-ambulance {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1.5px solid rgba(26, 158, 95, .2);
+        }
+
+        .btn-ambulance:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(14, 14, 14, .35);
+        }
+
+        .empty-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        @media(max-width:600px) {
+            .hero {
+                padding: 2rem 1.5rem 3rem
+            }
+
+            .area-grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .hospital-grid {
+                grid-template-columns: 1fr
+            }
+
+            .search-row {
+                flex-direction: column
+            }
+
+            .stats-bar {
+                gap: .75rem
+            }
+
+            .filter-btns {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo"><span class="logo-dot"></span>MediReach</div>
+        <span class="header-tag">Bengaluru · 20+ Areas</span>
+    </header>
+
+    <div class="emergency-strip">
+        <span>🚨 Emergency</span><a href="tel:112">112</a>
+        <span>🚑 Ambulance (EMRI)</span><a href="tel:108">108</a>
+        <span>🏥 Arogya Sahayavani</span><a href="tel:104">104</a>
+        <span>🔴 BBMP Control</span><a href="tel:1533">1533</a>
+    </div>
+
+    <div class="hero">
+        <h1>Find Hospitals<br>Across <span>Bengaluru</span></h1>
+        <p>Select your area · See hospitals, contacts &amp; ambulance numbers instantly</p>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat"><strong>20+</strong> Areas</div>
+        <div class="stat"><strong>200+</strong> Hospitals</div>
+        <div class="stat"><strong>24×7</strong> Emergency Info</div>
+    </div>
+
+    <div class="search-panel">
+        <div class="search-box">
+            <div class="search-row">
+                <input class="search-input" type="text" id="areaSearch"
+                    placeholder="🔍  Search area (e.g. Kengeri, BTM, Whitefield...)" oninput="filterAreas(this.value)">
+            </div>
+            <span class="section-label">Filter by Zone</span>
+            <div class="zone-tabs" id="zoneTabs">
+                <button class="zone-tab active" onclick="filterZone('All',this)">All Zones</button>
+                <button class="zone-tab" onclick="filterZone('North',this)">North</button>
+                <button class="zone-tab" onclick="filterZone('South',this)">South</button>
+                <button class="zone-tab" onclick="filterZone('East',this)">East</button>
+                <button class="zone-tab" onclick="filterZone('West',this)">West</button>
+                <button class="zone-tab" onclick="filterZone('Central',this)">Central</button>
+            </div>
+            <span class="section-label">Choose Your Area</span>
+            <div class="area-grid" id="areaGrid"></div>
+        </div>
+    </div>
+
+    <div class="results-section" id="resultsSection" style="display:none">
+        <div class="results-header">
+            <span class="results-title" id="resultsTitle"></span>
+            <span class="results-count" id="resultsCount"></span>
+            <div class="filter-btns">
+                <button class="filter-btn active-filter" onclick="applyFilter('All',this)">All</button>
+                <button class="filter-btn" onclick="applyFilter('govt',this)">Govt</button>
+                <button class="filter-btn" onclick="applyFilter('pvt',this)">Private</button>
+                <button class="filter-btn" onclick="applyFilter('ambulance',this)">Has Ambulance</button>
+            </div>
+        </div>
+        <div class="hospital-grid" id="hospitalGrid"></div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <span class="empty-icon">🗺️</span>
+        <p>Select an area above to see nearby hospitals</p>
+    </div>
+
+    <script>
+        // ─── HOSPITAL DATABASE ───────────────────────────────────────────────────────
+        const hospitalData = {
+
+            // ──────────────── NORTH ────────────────
+            "Yelahanka": {
+                zone: "North",
+                hospitals: [
+                    { name: "Aster CMI Hospital", type: "pvt", address: "43/2, New Airport Road, NH-44, Sahakara Nagar, Bengaluru - 560092", phone: "080-43422222", ambulance: "080-43422222", specialties: ["Emergency 24x7", "Cardiac", "Neuro", "Oncology", "Transplant"] },
+                    { name: "Sparsh Hospital Yelahanka", type: "pvt", address: "New Airport Road, Kogilu Cross, Nehru Nagar, Bengaluru - 560064", phone: "080-49406565", ambulance: "080-49406565", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Neuro", "Ortho"] },
+                    { name: "General Hospital Yelahanka", type: "govt", address: "BB Road, Yelahanka, Bengaluru - 560064", phone: "080-28567000", ambulance: "108", specialties: ["General Medicine", "Maternity", "Emergency", "Paediatrics"] },
+                    { name: "Navchetana Hospital", type: "pvt", address: "CA 17/A2, A Sector, Doddaballapura Main Road, Yelahanka, Bengaluru - 560064", phone: "080-42480000", ambulance: "080-42480000", specialties: ["Multi-Specialty", "General Surgery", "Gynaecology", "Paediatrics"] },
+                    { name: "Neha Prakash Hospital", type: "pvt", address: "#8, 6th Main Road, 5th Phase, Yelahanka New Town, Bengaluru - 560064", phone: "080-28565699", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG"] },
+                    { name: "Baptist Hospital Hebbal", type: "pvt", address: "Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-22000000", ambulance: "080-22000000", specialties: ["Multi-Specialty", "Emergency", "Cancer", "Paediatrics"] },
+                    { name: "People Tree Hospitals", type: "pvt", address: "#33, Tumkur Road, Goraguntepalya, Bengaluru - 560022", phone: "080-42888888", ambulance: "080-42888888", specialties: ["Cardiac", "Neuro", "Ortho", "Emergency", "Transplant"] },
+                    { name: "HCG Cancer Centre", type: "pvt", address: "No.8, Kalinga Rao Road, Sampangi Rama Nagar, Bengaluru - 560027", phone: "080-40206040", ambulance: "080-40206040", specialties: ["Oncology", "Radiation", "Chemotherapy", "Bone Marrow"] },
+                    { name: "Anupamaa Hospital", type: "pvt", address: "Yelahanka New Town, Bengaluru - 560064", phone: "080-28562324", ambulance: null, specialties: ["Gastro", "General Medicine", "Surgery", "Gynaecology"] },
+                    { name: "Columbia Asia Hospital Hebbal", type: "pvt", address: "Kirloskar Business Park, Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-61227777", ambulance: "080-61227777", specialties: ["Multi-Specialty", "Emergency", "Maternity", "ICU"] }
+                ]
+            },
+
+            "Hebbal": {
+                zone: "North",
+                hospitals: [
+                    { name: "Columbia Asia Hospital Hebbal", type: "pvt", address: "Kirloskar Business Park, Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-61227777", ambulance: "080-61227777", specialties: ["Emergency 24x7", "Maternity", "Paediatrics", "Surgery"] },
+                    { name: "Manipal Hospital Hebbal", type: "pvt", address: "98, HAL Airport Road, Hebbal, Bengaluru - 560017", phone: "080-25024444", ambulance: "080-25024444", specialties: ["Multi-Specialty", "Emergency", "Bone Marrow Transplant", "Neuro"] },
+                    { name: "Baptist Hospital", type: "pvt", address: "Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-22000000", ambulance: "080-22000000", specialties: ["Emergency", "Cardiac", "Cancer", "Paediatrics", "Trauma"] },
+                    { name: "Aster CMI Hospital", type: "pvt", address: "43/2, New Airport Road, NH-44, Sahakara Nagar, Bengaluru - 560092", phone: "080-43422222", ambulance: "080-43422222", specialties: ["Cardiac", "Neuro", "Oncology", "Transplant"] },
+                    { name: "People Tree Hospitals", type: "pvt", address: "#33, Tumkur Road, Goraguntepalya, Bengaluru - 560022", phone: "080-42888888", ambulance: "080-42888888", specialties: ["Cardiac", "Neuro", "Ortho", "Emergency"] },
+                    { name: "Government Hospital Sadashivanagar", type: "govt", address: "Sadashivanagar, Bengaluru - 560080", phone: "080-23613901", ambulance: "108", specialties: ["General Medicine", "OBG", "Paediatrics"] },
+                    { name: "Meenakshi Mission Hospital", type: "pvt", address: "Lake Side Hospital Road, Hebbal, Bengaluru - 560024", phone: "080-23630000", ambulance: "080-23630000", specialties: ["General Medicine", "Surgery", "Diagnostics"] },
+                    { name: "Fortis Hospital Rajajinagar", type: "pvt", address: "44/2, 1st R Block, Rajajinagar, Bengaluru - 560010", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Cardiac", "Oncology", "Emergency", "Transplant"] },
+                    { name: "Narayana Multispeciality Hospital Whitefield", type: "pvt", address: "Narayana Health City, 258/A, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Neuro", "Transplant", "Oncology"] },
+                    { name: "Vikram Hospital Bengaluru", type: "pvt", address: "71/1, Millers Road, Bengaluru - 560052", phone: "080-40206050", ambulance: "080-40206050", specialties: ["Cardiac", "Neuro Surgery", "Gastro", "Ortho"] }
+                ]
+            },
+
+            "RT Nagar": {
+                zone: "North",
+                hospitals: [
+                    { name: "Sakra World Hospital", type: "pvt", address: "SY No 52/2 & 52/3, Devarabeesanahalli, Whitefield, Bengaluru - 560103", phone: "080-49690000", ambulance: "080-49690000", specialties: ["Emergency", "Stroke", "Cardiac", "Ortho"] },
+                    { name: "Government Hospital RT Nagar", type: "govt", address: "RT Nagar Main Road, Bengaluru - 560032", phone: "080-23430085", ambulance: "108", specialties: ["General Medicine", "Maternity", "Emergency", "Surgery"] },
+                    { name: "Ganga Hospital RT Nagar", type: "pvt", address: "5th Cross, 3rd Main, Ganga Nagar, Bengaluru - 560032", phone: "080-23434567", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Lakshmi Hospital Ganganagar", type: "pvt", address: "402, 2nd Cross, Judges Colony, Ganganagar, Bengaluru - 560032", phone: "080-23530987", ambulance: null, specialties: ["General Medicine", "Surgery", "Gynaecology"] },
+                    { name: "Manipal Hospital Whitefield", type: "pvt", address: "ITPL Main Road, Whitefield, Bengaluru - 560048", phone: "080-43344444", ambulance: "080-43344444", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Neuro"] },
+                    { name: "MS Ramaiah Memorial Hospital", type: "pvt", address: "MSR Nagar, MSRIT Post, Bengaluru - 560054", phone: "080-23606060", ambulance: "080-23606060", specialties: ["Emergency 24x7", "Cardiac", "Neuro", "Teaching Hospital"] },
+                    { name: "Fortis Hospital Rajajinagar", type: "pvt", address: "44/2, 1st R Block, Rajajinagar, Bengaluru - 560010", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Cardiac", "Oncology", "Emergency", "Transplant"] },
+                    { name: "Columbia Asia Yeshwantpur", type: "pvt", address: "26/4, Brigade Gateway, Malleshwaram West, Bengaluru - 560055", phone: "080-71774444", ambulance: "080-71774444", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Aayush Hospital", type: "pvt", address: "RT Nagar Main Road, Bengaluru - 560032", phone: "080-23431234", ambulance: null, specialties: ["General Medicine", "Paediatrics", "OBG"] },
+                    { name: "ESI Hospital Rajajinagar", type: "govt", address: "Rajajinagar Industrial Estate, Bengaluru - 560010", phone: "080-23320043", ambulance: "108", specialties: ["Govt ESI", "General Medicine", "Surgery", "Emergency"] }
+                ]
+            },
+
+            // ──────────────── SOUTH ────────────────
+            "Banashankari": {
+                zone: "South",
+                hospitals: [
+                    { name: "Bhagwan Mahaveer Jain Hospital", type: "pvt", address: "Millers Road, Vasanthnagar, Bengaluru - 560052", phone: "080-22077700", ambulance: "080-22077700", specialties: ["Cardiac", "Ortho", "Neuro", "Emergency"] },
+                    { name: "Udhbhava Hospital", type: "pvt", address: "No.114, 100 Feet Ring Road, Banashankari 3rd Stage, Bengaluru - 560085", phone: "080-26695555", ambulance: "080-26695555", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Ortho"] },
+                    { name: "Sevakshetra Hospital", type: "pvt", address: "27, 27th Cross, 2nd Stage, Banashankari, Bengaluru - 560070", phone: "080-26710333", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Astra Super Speciality Hospital", type: "pvt", address: "21/7, Vasanthapura Main Road, Konanakunte Cross, Bengaluru - 560062", phone: "080-29756789", ambulance: "080-29756789", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Neuro"] },
+                    { name: "Motherhood Hospital Banashankari", type: "pvt", address: "4/19, 30th Main Road, Banashankari 3rd Stage, Banagiri Nagar, Bengaluru - 560085", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "NICU", "Paediatrics", "IVF"] },
+                    { name: "Government Hospital Banashankari", type: "govt", address: "Banashankari 2nd Stage, Bengaluru - 560070", phone: "080-26717777", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Aster RV Hospital JP Nagar", type: "pvt", address: "CA 37, 24th Main Road, 1st Phase, JP Nagar, Bengaluru - 560078", phone: "080-43499999", ambulance: "080-43499999", specialties: ["Emergency", "Cardiac", "Neuro", "Gastro"] },
+                    { name: "Sri Jayadeva Institute of Cardiovascular Sciences", type: "govt", address: "Bannerghatta Road, Jayanagar 9th Block, Bengaluru - 560069", phone: "080-26574746", ambulance: "080-26574746", specialties: ["Cardiology", "Cardiac Surgery", "Cath Lab", "Heart Failure"] },
+                    { name: "Sparsh Hospital JP Nagar", type: "pvt", address: "#4/1, Phase 1, JP Nagar, Bengaluru - 560078", phone: "080-45657777", ambulance: "080-45657777", specialties: ["Ortho", "Spine", "Sports Medicine", "Rehabilitation"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Opp IIM, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Liver Transplant"] }
+                ]
+            },
+
+            "JP Nagar": {
+                zone: "South",
+                hospitals: [
+                    { name: "Aster RV Hospital", type: "pvt", address: "CA 37, 24th Main Road, 1st Phase, JP Nagar, Bengaluru - 560078", phone: "080-43499999", ambulance: "080-43499999", specialties: ["Emergency 24x7", "Cardiac", "Neuro", "Gastro"] },
+                    { name: "Sparsh Hospital JP Nagar", type: "pvt", address: "#4/1, Phase 1, JP Nagar, Bengaluru - 560078", phone: "080-45657777", ambulance: "080-45657777", specialties: ["Ortho", "Spine", "Sports Medicine", "Rehabilitation"] },
+                    { name: "Sagar Hospitals JP Nagar", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Cardiac", "Neuro Surgery", "Emergency", "Kidney Transplant"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Opp IIM, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Liver Transplant"] },
+                    { name: "Motherhood Hospital Banashankari", type: "pvt", address: "4/19, 30th Main Road, Banagiri Nagar, Bengaluru - 560085", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "NICU", "Paediatrics", "IVF"] },
+                    { name: "Government Hospital JP Nagar", type: "govt", address: "JP Nagar 2nd Phase, Bengaluru - 560078", phone: "080-26490044", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Surgery"] },
+                    { name: "Sri Jayadeva CVS Institute", type: "govt", address: "Bannerghatta Road, Jayanagar 9th Block, Bengaluru - 560069", phone: "080-26574746", ambulance: "080-26574746", specialties: ["Cardiology", "Heart Surgery", "ICU", "Cath Lab"] },
+                    { name: "Astra Super Speciality Hospital", type: "pvt", address: "21/7, Vasanthapura Main Road, Konanakunte Cross, Bengaluru - 560062", phone: "080-29756789", ambulance: "080-29756789", specialties: ["Multi-Specialty", "Emergency", "Cardiac"] },
+                    { name: "Apollo Spectra JP Nagar", type: "pvt", address: "JP Nagar 7th Phase, Bengaluru - 560078", phone: "040-68334455", ambulance: null, specialties: ["Day Care Surgery", "Ortho", "ENT", "Urology"] },
+                    { name: "Bhagwan Mahaveer Jain Hospital", type: "pvt", address: "No.1, 2, Banashankari 3rd Phase, Avalahalli, BDA 2nd Layout, Bengaluru - 560085", phone: "080-22077700", ambulance: "080-22077700", specialties: ["Cardiac", "Neuro", "Ortho", "Emergency"] }
+                ]
+            },
+
+            "Kengeri": {
+                zone: "West",
+                hospitals: [
+                    { name: "BGS Gleneagles Global Hospital", type: "pvt", address: "67, Uttarahalli Road, Kengeri, Bengaluru - 560060", phone: "080-26174444", ambulance: "080-26174444", specialties: ["Multi-Specialty", "Emergency", "ICU", "Transplant"] },
+                    { name: "Government Hospital Kengeri", type: "govt", address: "Kengeri Satellite Town, Bengaluru - 560060", phone: "080-28482595", ambulance: "108", specialties: ["Emergency", "General Medicine", "Maternity", "Paediatrics"] },
+                    { name: "Sapthagiri Hospital", type: "pvt", address: "No.15, Hesaraghatta Main Road, Kengeri, Bengaluru - 560090", phone: "080-23482028", ambulance: "080-23482028", specialties: ["General Medicine", "Surgery", "Gynaecology"] },
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Bommasandra Industrial Area, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Neuro", "Oncology", "Transplant"] },
+                    { name: "Sri Sai Hospital", type: "pvt", address: "Kengeri Main Road, Kengeri, Bengaluru - 560060", phone: "080-28481234", ambulance: null, specialties: ["General Surgery", "Ortho", "Paediatrics", "OBG"] },
+                    { name: "Cloudnine Hospital Kengeri", type: "pvt", address: "Kengeri Satellite Town, Bengaluru - 560060", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Government Hospital Uttarahalli", type: "govt", address: "Uttarahalli Main Road, Bengaluru - 560061", phone: "080-28485000", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency"] },
+                    { name: "Vydehi Institute Kengeri", type: "pvt", address: "BEML Layout, Kengeri, Bengaluru - 560060", phone: "080-28413381", ambulance: null, specialties: ["General Medicine", "Surgery", "Paediatrics"] },
+                    { name: "Astra Super Speciality Hospital", type: "pvt", address: "21/7, Vasanthapura Main Road, Konanakunte Cross, Bengaluru - 560062", phone: "080-29756789", ambulance: "080-29756789", specialties: ["Multi-Specialty", "Emergency", "Cardiac"] },
+                    { name: "ESI Hospital Kengeri", type: "govt", address: "Kengeri Satellite Town, Bengaluru - 560060", phone: "080-28481919", ambulance: "108", specialties: ["ESI Govt", "General Medicine", "Surgery", "Emergency"] }
+                ]
+            },
+
+            "RR Nagar": {
+                zone: "West",
+                hospitals: [
+                    { name: "Sparsh Hospital RR Nagar", type: "pvt", address: "Ideal Homes Township, 18th Main Road, Rajarajeshwari Nagar, Bengaluru - 560098", phone: "080-49406565", ambulance: "080-49406565", specialties: ["Cardiac", "Gastro", "Neuro", "Transplant", "Emergency"] },
+                    { name: "SSNMC Super Speciality Hospital", type: "pvt", address: "Unit 8, Ideal Homes Township, Near Icon International School, RR Nagar, Bengaluru - 560098", phone: "080-29700888", ambulance: "080-29700888", specialties: ["Multi-Specialty", "General Medicine", "Surgery", "OBG"] },
+                    { name: "Government Hospital RR Nagar", type: "govt", address: "Rajarajeshwari Nagar, Bengaluru - 560098", phone: "080-28602222", ambulance: "108", specialties: ["Emergency", "General Medicine", "Maternity", "Paediatrics"] },
+                    { name: "BGS Gleneagles Global Hospital", type: "pvt", address: "67, Uttarahalli Road, Kengeri, Bengaluru - 560060", phone: "080-26174444", ambulance: "080-26174444", specialties: ["Multi-Specialty", "Emergency", "ICU", "Transplant"] },
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Hosur Road, Bommasandra, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac Surgery", "Neuro", "Transplant", "Oncology"] },
+                    { name: "Apollo Clinic RR Nagar", type: "pvt", address: "Ideal Homes Circle, 9th Main, RR Nagar, Bengaluru - 560098", phone: "1860-500-1066", ambulance: null, specialties: ["OPD", "Diagnostics", "General Medicine", "Pharmacy"] },
+                    { name: "Motherhood Hospital Banashankari", type: "pvt", address: "4/19, 30th Main Road, Banagiri Nagar, Bengaluru - 560085", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "NICU", "Paediatrics", "IVF"] },
+                    { name: "Sri Dhanwantari Hospital", type: "pvt", address: "BEML Layout, RR Nagar, Bengaluru - 560098", phone: "080-28602500", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Sapthagiri Hospital", type: "pvt", address: "No.15, Hesaraghatta Main Road, Kengeri, Bengaluru - 560090", phone: "080-23482028", ambulance: "080-23482028", specialties: ["General Medicine", "Surgery", "Gynaecology"] },
+                    { name: "Astra Super Speciality Hospital", type: "pvt", address: "21/7, Vasanthapura Main Road, Konanakunte Cross, Bengaluru - 560062", phone: "080-29756789", ambulance: "080-29756789", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Neuro"] }
+                ]
+            },
+
+            // ──────────────── EAST ────────────────
+            "Whitefield": {
+                zone: "East",
+                hospitals: [
+                    { name: "Manipal Hospital Whitefield", type: "pvt", address: "ITPL Main Road, Whitefield, Bengaluru - 560048", phone: "080-43344444", ambulance: "080-43344444", specialties: ["Cardiac", "Oncology", "Neuro", "Robotic Surgery"] },
+                    { name: "Sakra World Hospital", type: "pvt", address: "SY No 52/2 & 52/3, Devarabeesanahalli, Whitefield, Bengaluru - 560103", phone: "080-49690000", ambulance: "080-49690000", specialties: ["Emergency", "Stroke", "Cardiac", "Ortho", "Spine"] },
+                    { name: "Vydehi Institute of Medical Sciences", type: "pvt", address: "82, EPIP Area, Whitefield, Bengaluru - 560066", phone: "080-28413381", ambulance: "080-28413381", specialties: ["Teaching Hospital", "Surgery", "Gynaecology", "Paediatrics"] },
+                    { name: "KIMS Hospital Whitefield", type: "pvt", address: "No.1, ITPL Road, Brookefield, Whitefield, Bengaluru - 560037", phone: "080-49403030", ambulance: "080-49403030", specialties: ["Multi-Specialty", "Emergency", "Oncology", "IVF"] },
+                    { name: "Cloudnine Hospital Whitefield", type: "pvt", address: "Whitefield Main Road, Bengaluru - 560066", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Government Hospital Whitefield", type: "govt", address: "Whitefield, Bengaluru - 560066", phone: "080-28451234", ambulance: "108", specialties: ["General Medicine", "Maternity", "Emergency", "Paediatrics"] },
+                    { name: "Sparsh Hospital Whitefield", type: "pvt", address: "Survey No 10P & 12P, Whitefield Main Road, Varthur Kodi, Bengaluru - 560066", phone: "080-49406565", ambulance: "080-49406565", specialties: ["Emergency", "Ortho", "Cardiac", "Neuro"] },
+                    { name: "Narayana Multispeciality Whitefield", type: "pvt", address: "Narayana Health City, 258/A, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Transplant", "Oncology", "Emergency"] },
+                    { name: "Motherhood Hospital Whitefield", type: "pvt", address: "Whitefield Main Road, Bengaluru - 560066", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "NICU", "Women's Health", "IVF"] },
+                    { name: "HCG Cancer Centre Whitefield", type: "pvt", address: "No.8, Kalinga Rao Road, Bengaluru - 560027", phone: "080-40206040", ambulance: "080-40206040", specialties: ["Cancer Treatment", "Chemotherapy", "Radiation", "Bone Marrow"] }
+                ]
+            },
+
+            "Marathahalli": {
+                zone: "East",
+                hospitals: [
+                    { name: "Sakra World Hospital", type: "pvt", address: "SY No 52/2, Devarabeesanahalli, Varthur Hobli, Bengaluru - 560103", phone: "080-49690000", ambulance: "080-49690000", specialties: ["Emergency 24x7", "Stroke Care", "Cardiac", "Ortho"] },
+                    { name: "Columbia Asia Hospital Hebbal", type: "pvt", address: "Kirloskar Business Park, Bellary Road, Bengaluru - 560024", phone: "080-61227777", ambulance: "080-61227777", specialties: ["Multi-Specialty", "Emergency", "Maternity", "ICU"] },
+                    { name: "Manipal Hospital HAL Airport Road", type: "pvt", address: "98, HAL Airport Road, Bengaluru - 560017", phone: "080-25024444", ambulance: "080-25024444", specialties: ["Multi-Specialty", "Emergency", "Bone Marrow Transplant", "Neuro"] },
+                    { name: "Sparsh Hospital Whitefield", type: "pvt", address: "Whitefield Main Road, Varthur Kodi, Bengaluru - 560066", phone: "080-49406565", ambulance: "080-49406565", specialties: ["Emergency", "Ortho", "Cardiac", "Neuro"] },
+                    { name: "Government Hospital Marathahalli", type: "govt", address: "Marathahalli Bridge, Old Airport Road, Bengaluru - 560037", phone: "080-25288888", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Vydehi Institute of Medical Sciences", type: "pvt", address: "82, EPIP Area, Whitefield, Bengaluru - 560066", phone: "080-28413381", ambulance: "080-28413381", specialties: ["Teaching Hospital", "Surgery", "Gynaecology", "Paediatrics"] },
+                    { name: "KIMS Hospital Whitefield", type: "pvt", address: "No.1, ITPL Road, Brookefield, Bengaluru - 560037", phone: "080-49403030", ambulance: "080-49403030", specialties: ["Multi-Specialty", "Emergency", "Oncology", "IVF"] },
+                    { name: "Pragathi Hospital", type: "pvt", address: "Marathahalli, Old Airport Road, Bengaluru - 560037", phone: "080-41123456", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Cloudnine Hospital Bellandur", type: "pvt", address: "1/79/4, Bellandur Village, Bengaluru - 560103", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Apollo Clinic Marathahalli", type: "pvt", address: "Marathahalli Main Road, Bengaluru - 560037", phone: "1860-500-1066", ambulance: null, specialties: ["OPD", "Diagnostics", "General Medicine", "Pharmacy"] }
+                ]
+            },
+
+            "Electronic City": {
+                zone: "South",
+                hospitals: [
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Bommasandra Industrial Area, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac Surgery", "Neuro", "Transplant", "Oncology"] },
+                    { name: "Vikram Hospital Electronic City", type: "pvt", address: "Phase 1, Electronic City, Bengaluru - 560100", phone: "080-41493939", ambulance: "080-41493939", specialties: ["Multi-Specialty", "Emergency", "Surgery", "Maternity"] },
+                    { name: "Motherhood Hospital Electronic City", type: "pvt", address: "Electronic City Phase 2, Bengaluru - 560100", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "IVF", "NICU", "Women's Health"] },
+                    { name: "Government Hospital HSR Layout", type: "govt", address: "27th Main, HSR Layout, Bengaluru - 560102", phone: "080-22950033", ambulance: "108", specialties: ["General Medicine", "Maternity", "Emergency", "Paediatrics"] },
+                    { name: "Columbia Asia Hospital Sarjapur Road", type: "pvt", address: "Survey No.10, Doddakannelli Village, Sarjapur Road, Bengaluru - 560035", phone: "080-66966966", ambulance: "080-66966966", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Transplant"] },
+                    { name: "Apollo Clinic Electronic City", type: "pvt", address: "Electronic City Phase 1, Bengaluru - 560100", phone: "1860-500-1066", ambulance: null, specialties: ["OPD", "Diagnostics", "General Medicine", "Pharmacy"] },
+                    { name: "Cloudnine Hospital HSR Layout", type: "pvt", address: "HSR Layout, Bengaluru - 560102", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "ESI Hospital Electronic City", type: "govt", address: "Electronic City Phase 2, Bengaluru - 560100", phone: "080-28523456", ambulance: "108", specialties: ["ESI Govt", "General Medicine", "Surgery", "Emergency"] },
+                    { name: "Sparsh Hospital Anekal", type: "pvt", address: "Anekal Road, Electronic City, Bengaluru - 560099", phone: "080-49406565", ambulance: "080-49406565", specialties: ["Emergency", "Ortho", "Cardiac", "Neuro"] }
+                ]
+            },
+
+            // ──────────────── CENTRAL ────────────────
+            "Jayanagar": {
+                zone: "South",
+                hospitals: [
+                    { name: "Sri Jayadeva Institute of Cardiovascular Sciences", type: "govt", address: "Bannerghatta Road, Jayanagar 9th Block, Bengaluru - 560069", phone: "080-26574746", ambulance: "080-26574746", specialties: ["Cardiology", "Cardiac Surgery", "Cath Lab", "Heart Failure ICU"] },
+                    { name: "NIMHANS", type: "govt", address: "Hosur Road, Lakkasandra, Bengaluru - 560029", phone: "080-46110007", ambulance: "080-46110007", specialties: ["Neurology", "Psychiatry", "Neuro-Surgery", "Psychology"] },
+                    { name: "Manipal Hospital Jayanagar", type: "pvt", address: "5, 1st Cross, Jayanagar, Bengaluru - 560011", phone: "080-25533333", ambulance: "080-25533333", specialties: ["Multi-Specialty", "Emergency", "Trauma", "Neuro"] },
+                    { name: "Apollo Spectra Jayanagar", type: "pvt", address: "No.9, 37th Cross, Jayanagar 8th Block, Bengaluru - 560082", phone: "040-68334455", ambulance: "040-68334455", specialties: ["Day Care Surgery", "Ortho", "ENT", "Urology"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Opp IIM, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Transplant"] },
+                    { name: "Garden City Hospital Jayanagar", type: "pvt", address: "13218, 22nd Cross, 3rd Block, Jayanagar, Bengaluru - 560011", phone: "080-26631234", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Shanthi Polyclinic Jayanagar", type: "pvt", address: "679, 11th Main, 36th Cross, 4th Block, Jayanagar, Bengaluru - 560011", phone: "080-26640555", ambulance: null, specialties: ["General Medicine", "OBG", "Paediatrics", "Surgery"] },
+                    { name: "Government Hospital Jayanagar", type: "govt", address: "Jayanagar 1st Block, Bengaluru - 560011", phone: "080-26516677", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Sagar Hospitals Jayanagar", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Cardiac", "Neuro", "Emergency", "Kidney Transplant"] },
+                    { name: "Kidwai Memorial Institute of Oncology", type: "govt", address: "Dr M H Marigowda Road, Bengaluru - 560029", phone: "080-26094000", ambulance: "108", specialties: ["Cancer Treatment", "Chemotherapy", "Radiation", "Surgical Oncology"] }
+                ]
+            },
+
+            "Koramangala": {
+                zone: "South",
+                hospitals: [
+                    { name: "St. John's Medical College Hospital", type: "pvt", address: "John Nagar, Koramangala, Bengaluru - 560034", phone: "080-22065000", ambulance: "080-22065000", specialties: ["Emergency", "Trauma", "All Specialties", "Teaching Hospital"] },
+                    { name: "Sagar Hospitals Koramangala", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Emergency", "Cardiac", "Neuro", "Kidney Transplant"] },
+                    { name: "Motherhood Hospital Koramangala", type: "pvt", address: "#17, 5th Cross, Koramangala 5th Block, Bengaluru - 560095", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "IVF", "NICU", "Gynaecology"] },
+                    { name: "Cloudnine Hospital Koramangala", type: "pvt", address: "Koramangala, Bengaluru - 560095", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Fortis Hospital Richmond Road", type: "pvt", address: "14, Cunningham Road, Bengaluru - 560052", phone: "080-49401066", ambulance: "080-49401066", specialties: ["Multi-Specialty", "Cardiac", "Oncology", "Emergency"] },
+                    { name: "Columbia Asia Hospital Sarjapur", type: "pvt", address: "Survey No.10, Doddakannelli Village, Sarjapur Road, Bengaluru - 560035", phone: "080-66966966", ambulance: "080-66966966", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Government Hospital Koramangala", type: "govt", address: "Koramangala 4th Block, Bengaluru - 560034", phone: "080-25634567", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Apollo Clinic Koramangala", type: "pvt", address: "Koramangala 5th Block, Bengaluru - 560095", phone: "1860-500-1066", ambulance: null, specialties: ["OPD", "Diagnostics", "General Medicine", "Pharmacy"] },
+                    { name: "NIMHANS", type: "govt", address: "Hosur Road, Lakkasandra, Bengaluru - 560029", phone: "080-46110007", ambulance: "080-46110007", specialties: ["Neurology", "Psychiatry", "Neuro-Surgery", "Psychology"] },
+                    { name: "Sri Venkateshwara Hospitals", type: "pvt", address: "Koramangala, Bengaluru - 560034", phone: "080-25527890", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] }
+                ]
+            },
+
+            "Indiranagar": {
+                zone: "East",
+                hospitals: [
+                    { name: "Cloudnine Hospital Indiranagar", type: "pvt", address: "No.1533, 100 Feet Road, Indiranagar, Bengaluru - 560038", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "St. John's Medical College Hospital", type: "pvt", address: "John Nagar, Bengaluru - 560034", phone: "080-22065000", ambulance: "080-22065000", specialties: ["Emergency", "Trauma", "All Specialties", "Teaching Hospital"] },
+                    { name: "Apollo Clinic Indiranagar", type: "pvt", address: "143, 5th Cross, 10th Main, HAL 2nd Stage, Indiranagar, Bengaluru - 560038", phone: "040-43443434", ambulance: null, specialties: ["OPD", "Diagnostics", "Pharmacy", "General Medicine"] },
+                    { name: "Columbia Asia Hospital Hebbal", type: "pvt", address: "Kirloskar Business Park, Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-61227777", ambulance: "080-61227777", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Ortho"] },
+                    { name: "Manipal Hospital HAL Airport Road", type: "pvt", address: "98, HAL Airport Road, Bengaluru - 560017", phone: "080-25024444", ambulance: "080-25024444", specialties: ["Multi-Specialty", "Emergency", "Bone Marrow Transplant"] },
+                    { name: "Government Hospital Indiranagar", type: "govt", address: "CMH Road, Indiranagar, Bengaluru - 560038", phone: "080-25279999", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Maruthi Hospital Indiranagar", type: "pvt", address: "957, 12th Main, Indiranagar 2nd Stage, Bengaluru - 560038", phone: "080-25282121", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Ortho"] },
+                    { name: "Sakra World Hospital", type: "pvt", address: "SY No 52/2, Devarabeesanahalli, Bengaluru - 560103", phone: "080-49690000", ambulance: "080-49690000", specialties: ["Emergency", "Stroke", "Cardiac", "Ortho"] },
+                    { name: "Vinayaka Hospital Indiranagar", type: "pvt", address: "Indiranagar, Bengaluru - 560038", phone: "080-25260987", ambulance: null, specialties: ["General Medicine", "Surgery", "Gynaecology", "Paediatrics"] },
+                    { name: "Fortis Hospital Cunningham Road", type: "pvt", address: "14, Cunningham Road, Bengaluru - 560052", phone: "080-49401066", ambulance: "080-49401066", specialties: ["Cardiac", "Oncology", "Multi-Specialty", "Emergency"] }
+                ]
+            },
+
+            // ──────────────── NORTH-WEST ────────────────
+            "Rajajinagar": {
+                zone: "West",
+                hospitals: [
+                    { name: "MS Ramaiah Memorial Hospital", type: "pvt", address: "MSR Nagar, MSRIT Post, Bengaluru - 560054", phone: "080-23606060", ambulance: "080-23606060", specialties: ["Emergency 24x7", "Cardiac", "Neuro", "Teaching Hospital"] },
+                    { name: "Sanjay Gandhi Accident Hospital", type: "govt", address: "Rajajinagar, Bengaluru - 560010", phone: "080-23323045", ambulance: "108", specialties: ["Trauma", "Ortho", "Plastic Surgery", "Burns"] },
+                    { name: "Fortis Hospital Rajajinagar", type: "pvt", address: "44/2, 1st R Block, Rajajinagar, Bengaluru - 560010", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Cardiac", "Oncology", "Emergency", "Transplant"] },
+                    { name: "Citizens Specialty Hospital", type: "pvt", address: "No.10, Rajajinagar Industrial Area, Bengaluru - 560044", phone: "080-42227000", ambulance: "080-42227000", specialties: ["Multi-Specialty", "Cardiac", "Oncology", "Neuro"] },
+                    { name: "Sparsh Hospital Rajajinagar", type: "pvt", address: "Infantry Road, Bengaluru - 560001", phone: "080-45657777", ambulance: "080-45657777", specialties: ["Ortho", "Sports Medicine", "Spine", "Joint Replacement"] },
+                    { name: "Columbia Asia Hospital Yeshwantpur", type: "pvt", address: "26/4, Brigade Gateway, Malleshwaram West, Bengaluru - 560055", phone: "080-71774444", ambulance: "080-71774444", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Gayathri Hospital Vijayanagar", type: "pvt", address: "91, Magadi Chord Road, Vijayanagar, Bengaluru - 560052", phone: "080-23390012", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "ESI Hospital Rajajinagar", type: "govt", address: "Rajajinagar Industrial Estate, Bengaluru - 560010", phone: "080-23320043", ambulance: "108", specialties: ["Govt ESI", "General Medicine", "Surgery", "Emergency"] },
+                    { name: "Shastry Memorial Hospital Vijayanagar", type: "pvt", address: "401, Manuvana, Vijayanagar, Bengaluru - 560040", phone: "080-23303456", ambulance: null, specialties: ["General Medicine", "OBG", "Surgery", "Paediatrics"] },
+                    { name: "People Tree Hospitals", type: "pvt", address: "#33, Tumkur Road, Goraguntepalya, Bengaluru - 560022", phone: "080-42888888", ambulance: "080-42888888", specialties: ["Cardiac", "Neuro", "Ortho", "Emergency"] }
+                ]
+            },
+
+            "Malleshwaram": {
+                zone: "Central",
+                hospitals: [
+                    { name: "Kidwai Memorial Institute of Oncology", type: "govt", address: "Dr M H Marigowda Road, Bengaluru - 560029", phone: "080-26094000", ambulance: "108", specialties: ["Cancer Treatment", "Chemotherapy", "Radiation", "Surgical Oncology"] },
+                    { name: "Columbia Asia Hospital Yeshwantpur", type: "pvt", address: "26/4, Brigade Gateway, Malleshwaram West, Bengaluru - 560055", phone: "080-71774444", ambulance: "080-71774444", specialties: ["Multi-Specialty", "Emergency", "ICU", "Maternity"] },
+                    { name: "Victoria Hospital", type: "govt", address: "Fort Road, Bengaluru - 560002", phone: "080-22867009", ambulance: "108", specialties: ["Emergency Trauma", "Burns", "General Surgery", "Teaching"] },
+                    { name: "Kempa Chellamma General Hospital", type: "govt", address: "Near Malleswaram Police Station, Malleshwaram Circle, Bengaluru - 560003", phone: "080-23563001", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency"] },
+                    { name: "Baptist Hospital", type: "pvt", address: "Bellary Road, Hebbal, Bengaluru - 560024", phone: "080-22000000", ambulance: "080-22000000", specialties: ["Multi-Specialty", "Emergency", "Paediatrics", "Cancer"] },
+                    { name: "MS Ramaiah Memorial Hospital", type: "pvt", address: "MSR Nagar, MSRIT Post, Bengaluru - 560054", phone: "080-23606060", ambulance: "080-23606060", specialties: ["Emergency 24x7", "Cardiac", "Neuro", "Teaching Hospital"] },
+                    { name: "BGS Gleneagles Malleshwaram", type: "pvt", address: "Malleshwaram, Bengaluru - 560003", phone: "080-22341234", ambulance: "080-22341234", specialties: ["Multi-Specialty", "Cardiac", "Emergency", "Ortho"] },
+                    { name: "People Tree Hospitals", type: "pvt", address: "#33, Tumkur Road, Goraguntepalya, Bengaluru - 560022", phone: "080-42888888", ambulance: "080-42888888", specialties: ["Cardiac", "Neuro", "Ortho", "Emergency", "Transplant"] },
+                    { name: "HCG Cancer Centre", type: "pvt", address: "No.8, Kalinga Rao Road, Sampangi Rama Nagar, Bengaluru - 560027", phone: "080-40206040", ambulance: "080-40206040", specialties: ["Oncology", "Radiation", "Chemotherapy", "Bone Marrow"] },
+                    { name: "Fortis Hospital Cunningham Road", type: "pvt", address: "14, Cunningham Road, Millers Tank Bund Road, Bengaluru - 560052", phone: "080-49401066", ambulance: "080-49401066", specialties: ["Multi-Specialty", "Cardiac", "Oncology", "Emergency"] }
+                ]
+            },
+
+            // ──────────────── HSR / BTM ────────────────
+            "HSR Layout": {
+                zone: "South",
+                hospitals: [
+                    { name: "Columbia Asia Hospital Sarjapur", type: "pvt", address: "Survey No.10, Doddakannelli Village, Sarjapur Road, Bengaluru - 560035", phone: "080-66966966", ambulance: "080-66966966", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Cloudnine Hospital HSR Layout", type: "pvt", address: "HSR Layout, Bengaluru - 560102", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Government Hospital HSR Layout", type: "govt", address: "27th Main, HSR Layout, Bengaluru - 560102", phone: "080-22950033", ambulance: "108", specialties: ["General Medicine", "Maternity", "Emergency", "Paediatrics"] },
+                    { name: "Bhagavathi Hospital HSR Layout", type: "pvt", address: "6th Sector, Ring Road, HSR Layout, Bengaluru - 560102", phone: "080-41514888", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Sankalp Nethralaya HSR Layout", type: "pvt", address: "85/1, 19th Main, HSR Layout Sector 1, Bengaluru - 560025", phone: "080-22940000", ambulance: null, specialties: ["Ophthalmology", "Eye Surgery", "Lasik", "Retina"] },
+                    { name: "Nano Hospitals BTM Layout", type: "pvt", address: "BTM 6th Stage, 2nd Block, Bengaluru - 560076", phone: "080-22482828", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "St. John's Medical College Hospital", type: "pvt", address: "John Nagar, Bengaluru - 560034", phone: "080-22065000", ambulance: "080-22065000", specialties: ["Emergency", "Trauma", "All Specialties", "Teaching Hospital"] },
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Bommasandra, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Neuro", "Transplant", "Oncology"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Transplant"] },
+                    { name: "Motherhood Hospital Sarjapur Road", type: "pvt", address: "Sarjapur Road, Bengaluru - 560103", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "IVF", "NICU", "Gynaecology"] }
+                ]
+            },
+
+            "BTM Layout": {
+                zone: "South",
+                hospitals: [
+                    { name: "Marigold Sugar Hospital BTM", type: "pvt", address: "243, 3rd Cross, 7th Main Road, MICO Layout, BTM 2nd Stage, Bengaluru - 560078", phone: "080-26580222", ambulance: null, specialties: ["Diabetology", "Endocrinology", "General Medicine", "Bariatrics"] },
+                    { name: "Government Hospital BTM Layout", type: "govt", address: "BTM Layout 2nd Stage, Bengaluru - 560076", phone: "080-26631199", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Sagar Hospitals BTM Layout", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Cardiac", "Neuro", "Emergency", "Kidney Transplant"] },
+                    { name: "Cloudnine Hospital BTM Layout", type: "pvt", address: "BTM 2nd Stage, Bengaluru - 560076", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "St. John's Medical College Hospital", type: "pvt", address: "John Nagar, Bengaluru - 560034", phone: "080-22065000", ambulance: "080-22065000", specialties: ["Emergency", "Trauma", "All Specialties", "Teaching Hospital"] },
+                    { name: "Astra Super Speciality Hospital", type: "pvt", address: "21/7, Vasanthapura Main Road, Konanakunte Cross, Bengaluru - 560062", phone: "080-29756789", ambulance: "080-29756789", specialties: ["Multi-Specialty", "Emergency", "Cardiac"] },
+                    { name: "Apollo Clinic BTM Layout", type: "pvt", address: "BTM 2nd Stage, Bengaluru - 560076", phone: "1860-500-1066", ambulance: null, specialties: ["OPD", "Diagnostics", "General Medicine", "Pharmacy"] },
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Bommasandra, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Neuro", "Transplant", "Oncology"] },
+                    { name: "NIMHANS", type: "govt", address: "Hosur Road, Lakkasandra, Bengaluru - 560029", phone: "080-46110007", ambulance: "080-46110007", specialties: ["Neurology", "Psychiatry", "Neuro-Surgery", "Psychology"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Transplant"] }
+                ]
+            },
+
+            // ──────────────── OTHER KEY AREAS ────────────────
+            "Basavanagudi": {
+                zone: "South",
+                hospitals: [
+                    { name: "Victoria Hospital", type: "govt", address: "Fort Road, Bengaluru - 560002", phone: "080-22867009", ambulance: "108", specialties: ["Emergency Trauma", "Burns", "General Surgery", "Teaching"] },
+                    { name: "Kidwai Memorial Institute of Oncology", type: "govt", address: "Dr M H Marigowda Road, Bengaluru - 560029", phone: "080-26094000", ambulance: "108", specialties: ["Cancer Treatment", "Chemotherapy", "Radiation", "Surgical Oncology"] },
+                    { name: "Metro Hospital Basavanagudi", type: "pvt", address: "46/01, Model House Street, Kanakapura Road, Basavanagudi, Bengaluru - 560004", phone: "080-26603456", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Shekar Hospital", type: "pvt", address: "81, Bull Temple Road, Bengaluru - 560019", phone: "080-26612345", ambulance: null, specialties: ["General Medicine", "Surgery", "OBG", "Paediatrics"] },
+                    { name: "Sharada Dhanvanthri Hospital", type: "pvt", address: "12, 1st Cross, Shankarapuram, Bengaluru - 560004", phone: "080-26567890", ambulance: null, specialties: ["General Medicine", "OBG", "Paediatrics"] },
+                    { name: "Government Hospital Basavanagudi", type: "govt", address: "Basavanagudi, Bengaluru - 560004", phone: "080-26613300", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency"] },
+                    { name: "Sri Jayadeva CVS Institute", type: "govt", address: "Bannerghatta Road, Jayanagar 9th Block, Bengaluru - 560069", phone: "080-26574746", ambulance: "080-26574746", specialties: ["Cardiology", "Heart Surgery", "ICU", "Cath Lab"] },
+                    { name: "Aster RV Hospital", type: "pvt", address: "CA 37, 24th Main Road, JP Nagar, Bengaluru - 560078", phone: "080-43499999", ambulance: "080-43499999", specialties: ["Emergency", "Cardiac", "Neuro", "Gastro"] },
+                    { name: "Sagar Hospitals Jayanagar", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Cardiac", "Neuro", "Emergency", "Kidney Transplant"] },
+                    { name: "NIMHANS", type: "govt", address: "Hosur Road, Lakkasandra, Bengaluru - 560029", phone: "080-46110007", ambulance: "080-46110007", specialties: ["Neurology", "Psychiatry", "Neuro-Surgery", "Psychology"] }
+                ]
+            },
+
+            "Shivajinagar": {
+                zone: "Central",
+                hospitals: [
+                    { name: "Mallya Hospital", type: "pvt", address: "#2, Vittal Mallya Road, Bengaluru - 560001", phone: "080-22277979", ambulance: "080-22277979", specialties: ["Multi-Specialty", "Emergency", "Cardiac", "Neuro", "ICU"] },
+                    { name: "St. Martha's Hospital", type: "pvt", address: "Nrupathunga Road, Bengaluru - 560001", phone: "080-22862636", ambulance: "080-22862636", specialties: ["Emergency", "Maternity", "Surgery", "Teaching Hospital"] },
+                    { name: "Government Vani Vilas Hospital", type: "govt", address: "Vani Vilas Road, Bengaluru - 560002", phone: "080-26700014", ambulance: "108", specialties: ["Paediatrics", "Neonatology", "OBG", "Government Teaching"] },
+                    { name: "Bowring & Lady Curzon Hospital", type: "govt", address: "Shivajinagar, Bengaluru - 560001", phone: "080-25594455", ambulance: "108", specialties: ["Emergency", "General Medicine", "Surgery", "Teaching Hospital"] },
+                    { name: "Victoria Hospital", type: "govt", address: "Fort Road, Bengaluru - 560002", phone: "080-22867009", ambulance: "108", specialties: ["Emergency Trauma", "Burns", "General Surgery", "Teaching"] },
+                    { name: "Fortis Hospital Cunningham Road", type: "pvt", address: "14, Cunningham Road, Bengaluru - 560052", phone: "080-49401066", ambulance: "080-49401066", specialties: ["Cardiac", "Oncology", "Multi-Specialty", "Emergency"] },
+                    { name: "Vikram Hospital Millers Road", type: "pvt", address: "71/1, Millers Road, Bengaluru - 560052", phone: "080-40206050", ambulance: "080-40206050", specialties: ["Cardiac", "Neuro Surgery", "Gastro", "Ortho"] },
+                    { name: "HCG Cancer Centre", type: "pvt", address: "No.8, Kalinga Rao Road, Sampangi Rama Nagar, Bengaluru - 560027", phone: "080-40206040", ambulance: "080-40206040", specialties: ["Oncology", "Radiation", "Chemotherapy", "Bone Marrow"] },
+                    { name: "Bhagwan Mahaveer Jain Hospital", type: "pvt", address: "Millers Road, Vasanthnagar, Bengaluru - 560052", phone: "080-22077700", ambulance: "080-22077700", specialties: ["Cardiac", "Ortho", "Neuro", "Emergency"] },
+                    { name: "St. John's Medical College Hospital", type: "pvt", address: "John Nagar, Bengaluru - 560034", phone: "080-22065000", ambulance: "080-22065000", specialties: ["Emergency", "Trauma", "All Specialties", "Teaching Hospital"] }
+                ]
+            },
+
+            "Bellandur": {
+                zone: "East",
+                hospitals: [
+                    { name: "Columbia Asia Hospital Sarjapur Road", type: "pvt", address: "Survey No.10, Doddakannelli Village, Sarjapur Road, Bengaluru - 560035", phone: "080-66966966", ambulance: "080-66966966", specialties: ["Multi-Specialty", "Emergency", "ICU", "Surgery"] },
+                    { name: "Cloudnine Hospital Bellandur", type: "pvt", address: "1/79/4, Bellandur Village, Varthur Hobli, Bengaluru - 560103", phone: "080-68000600", ambulance: "080-68000600", specialties: ["Maternity", "NICU", "Paediatrics", "Fertility"] },
+                    { name: "Sakra World Hospital", type: "pvt", address: "SY No 52/2, Devarabeesanahalli, Bengaluru - 560103", phone: "080-49690000", ambulance: "080-49690000", specialties: ["Emergency", "Stroke", "Cardiac", "Ortho"] },
+                    { name: "Government Hospital Bellandur", type: "govt", address: "Bellandur, Bengaluru - 560103", phone: "080-28523333", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Manipal Hospital Whitefield", type: "pvt", address: "ITPL Main Road, Whitefield, Bengaluru - 560048", phone: "080-43344444", ambulance: "080-43344444", specialties: ["Cardiac", "Oncology", "Neuro", "Robotic Surgery"] },
+                    { name: "KIMS Hospital Whitefield", type: "pvt", address: "No.1, ITPL Road, Brookefield, Bengaluru - 560037", phone: "080-49403030", ambulance: "080-49403030", specialties: ["Multi-Specialty", "Emergency", "Oncology", "IVF"] },
+                    { name: "Apollo Spectra Bellandur", type: "pvt", address: "Sarjapur Road, Bengaluru - 560035", phone: "040-68334455", ambulance: null, specialties: ["Day Care Surgery", "Ortho", "ENT", "Urology"] },
+                    { name: "Vikram Hospital Bengaluru", type: "pvt", address: "71/1, Millers Road, Bengaluru - 560052", phone: "080-40206050", ambulance: "080-40206050", specialties: ["Cardiac", "Neuro", "Gastro", "Ortho"] },
+                    { name: "Narayana Health City", type: "pvt", address: "258/A, Bommasandra, Hosur Road, Bengaluru - 560099", phone: "1800-843-6622", ambulance: "1800-843-6622", specialties: ["Cardiac", "Transplant", "Oncology", "Emergency"] },
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Transplant"] }
+                ]
+            },
+
+            "Bannerghatta Road": {
+                zone: "South",
+                hospitals: [
+                    { name: "Fortis Hospital Bannerghatta", type: "pvt", address: "154/9, Bannerghatta Road, Opp IIM, Bengaluru - 560076", phone: "080-66214444", ambulance: "080-66214444", specialties: ["Oncology", "Cardiac", "Ortho", "Liver Transplant"] },
+                    { name: "Apollo Hospital Bannerghatta", type: "pvt", address: "154/11, Bannerghatta Road, Bengaluru - 560076", phone: "1066", ambulance: "1066", specialties: ["Multi-Specialty", "Cardiac", "Transplant", "Oncology"] },
+                    { name: "Sri Jayadeva CVS Institute", type: "govt", address: "Bannerghatta Road, Jayanagar 9th Block, Bengaluru - 560069", phone: "080-26574746", ambulance: "080-26574746", specialties: ["Cardiology", "Heart Surgery", "ICU", "Cath Lab"] },
+                    { name: "Government Hospital Bannerghatta", type: "govt", address: "Bannerghatta, Bengaluru - 560083", phone: "080-27828888", ambulance: "108", specialties: ["General Medicine", "OBG", "Emergency", "Paediatrics"] },
+                    { name: "Sagar Hospitals", type: "pvt", address: "44/54, 30th Cross, Tilaknagar, Bengaluru - 560041", phone: "080-69999999", ambulance: "080-69999999", specialties: ["Cardiac", "Neuro", "Emergency", "Transplant"] },
+                    { name: "NIMHANS", type: "govt", address: "Hosur Road, Lakkasandra, Bengaluru - 560029", phone: "080-46110007", ambulance: "080-46110007", specialties: ["Neurology", "Psychiatry", "Neuro-Surgery", "Psychology"] },
+                    { name: "Aster RV Hospital JP Nagar", type: "pvt", address: "CA 37, 24th Main Road, JP Nagar, Bengaluru - 560078", phone: "080-43499999", ambulance: "080-43499999", specialties: ["Emergency", "Cardiac", "Neuro", "Gastro"] },
+                    { name: "Motherhood Hospital Banashankari", type: "pvt", address: "4/19, 30th Main Road, Banagiri Nagar, Bengaluru - 560085", phone: "080-67238900", ambulance: "080-67238900", specialties: ["Maternity", "NICU", "Paediatrics", "IVF"] },
+                    { name: "Bhagwan Mahaveer Jain Hospital", type: "pvt", address: "1,2, Banashankari 3rd Phase, Avalahalli, Bengaluru - 560085", phone: "080-22077700", ambulance: "080-22077700", specialties: ["Cardiac", "Ortho", "Neuro", "Emergency"] },
+                    { name: "Kidwai Memorial Institute", type: "govt", address: "Dr M H Marigowda Road, Bengaluru - 560029", phone: "080-26094000", ambulance: "108", specialties: ["Cancer Treatment", "Chemotherapy", "Radiation", "Surgical Oncology"] }
+                ]
+            }
+        };
+
+        // ─── APP LOGIC ────────────────────────────────────────────────────────────────
+        const areas = Object.keys(hospitalData);
+        let activeArea = null;
+        let activeFilter = 'All';
+        let activeZone = 'All';
+
+        const areaGrid = document.getElementById('areaGrid');
+        const resultsSection = document.getElementById('resultsSection');
+        const emptyState = document.getElementById('emptyState');
+        const hospitalGrid = document.getElementById('hospitalGrid');
+        const resultsTitle = document.getElementById('resultsTitle');
+        const resultsCount = document.getElementById('resultsCount');
+
+        // Build area buttons
+        areas.forEach(area => {
+            const btn = document.createElement('button');
+            btn.className = 'area-btn';
+            btn.dataset.area = area;
+            btn.dataset.zone = hospitalData[area].zone;
+            btn.textContent = area;
+            btn.onclick = () => selectArea(area, btn);
+            areaGrid.appendChild(btn);
+        });
+
+        function filterAreas(q) {
+            document.querySelectorAll('.area-btn').forEach(b => {
+                const match = b.dataset.area.toLowerCase().includes(q.toLowerCase());
+                const zoneMatch = activeZone === 'All' || b.dataset.zone === activeZone;
+                b.classList.toggle('hidden', !(match && zoneMatch));
+            });
+        }
+
+        function filterZone(zone, btn) {
+            activeZone = zone;
+            document.querySelectorAll('.zone-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const q = document.getElementById('areaSearch').value;
+            document.querySelectorAll('.area-btn').forEach(b => {
+                const match = b.dataset.area.toLowerCase().includes(q.toLowerCase());
+                const zoneMatch = zone === 'All' || b.dataset.zone === zone;
+                b.classList.toggle('hidden', !(match && zoneMatch));
+            });
+        }
+
+        function selectArea(area, btn) {
+            if (activeArea === area) {
+                activeArea = null;
+                btn.classList.remove('active');
+                resultsSection.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            document.querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeArea = area;
+            activeFilter = 'All';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+            document.querySelector('.filter-btn').classList.add('active-filter');
+            renderHospitals(area);
+        }
+
+        function applyFilter(type, btn) {
+            activeFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+            btn.classList.add('active-filter');
+            if (activeArea) renderHospitals(activeArea);
+        }
+
+        function renderHospitals(area) {
+            let hospitals = hospitalData[area].hospitals;
+            if (activeFilter === 'govt') hospitals = hospitals.filter(h => h.type === 'govt');
+            if (activeFilter === 'pvt') hospitals = hospitals.filter(h => h.type === 'pvt');
+            if (activeFilter === 'ambulance') hospitals = hospitals.filter(h => h.ambulance);
+            hospitalGrid.innerHTML = '';
+            hospitals.forEach(h => {
+                const card = document.createElement('div');
+                card.className = 'hospital-card';
+                card.innerHTML = `
+      <div class="card-top">
+        <div class="hospital-name">${h.name}</div>
+        <span class="badge ${h.type === 'govt' ? 'badge-govt' : 'badge-pvt'}">${h.type === 'govt' ? 'Govt' : 'Private'}</span>
+      </div>
+      <div class="info-row">
+        <svg class="info-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.24 1 3 3.24 3 6c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5zm0 6.75A1.75 1.75 0 1 1 8 4.25a1.75 1.75 0 0 1 0 3.5z" fill="currentColor"/></svg>
+        ${h.address}
+      </div>
+      <div class="info-row">
+        <svg class="info-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2a1 1 0 0 1 1-1h2a1 1 0 0 1 .9.55l1 2a1 1 0 0 1-.22 1.17L6.44 5.94A8.01 8.01 0 0 0 9.56 9.5l1.23-1.24a1 1 0 0 1 1.17-.22l2 1A1 1 0 0 1 14.5 10v2a1 1 0 0 1-1 1C6.82 13 2.5 8.18 2.5 3a1 1 0 0 1 .5-.87V2z" fill="currentColor"/></svg>
+        <strong>${h.phone}</strong>
+      </div>
+      <div class="specs-wrap">${h.specialties.map(s => `<span class="spec-tag">${s}</span>`).join('')}</div>
+      <div class="ambul-row">
+        ${h.ambulance
+                        ? `<span class="ambulance-badge">🚑 Ambulance: ${h.ambulance}</span>`
+                        : `<span class="no-ambulance">⚠️ No in-house ambulance — call 108</span>`}
+      </div>
+      <div class="card-actions">
+        <a class="action-btn btn-call" href="tel:${h.phone.replace(/[^0-9]/g, '')}">📞 Call Hospital</a>
+        ${h.ambulance
+                        ? `<a class="action-btn btn-ambulance" href="tel:${h.ambulance.replace(/[^0-9]/g, '')}">🚑 Ambulance</a>`
+                        : `<a class="action-btn btn-ambulance" href="tel:108">🚑 Call 108</a>`}
+      </div>`;
+                hospitalGrid.appendChild(card);
+            });
+            resultsTitle.textContent = `Hospitals in ${area}`;
+            const zoneLabel = hospitalData[area].zone;
+            resultsCount.textContent = `${hospitals.length} hospital${hospitals.length !== 1 ? 's' : ''} · ${zoneLabel} Bengaluru`;
+            resultsSection.style.display = 'block';
+            emptyState.style.display = 'none';
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+
+</html>
